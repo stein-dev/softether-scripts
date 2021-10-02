@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo "Starting VPNClient"
+	vpnclient start
+echo "Connecting to Server..."
+	sleep 2
+	vpncmd /client localhost /cmd accountconnect kap1
+echo "Getting IP..."
+	dhclient vpn_se1
+echo "Routing IP..."
+	ip route add 159.89.199.192 via 192.168.1.1 dev wlp2s0 proto static
+    ip route del default
+    ip route add default via 192.168.30.1 dev vpn_se1
+echo "Generating Log..."
+vpncmd /client localhost /out:logs/log1.txt /cmd accountstatusget kap1
+chmod 755 logs/log1.txt
+chown $USER logs/log1.txt
+echo "Connected."
+read -p "Press [Enter] key to continue..." fackEnterKey
+
+
+
+

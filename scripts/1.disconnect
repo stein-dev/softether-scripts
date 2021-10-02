@@ -1,0 +1,18 @@
+#!/bin/bash
+
+account=$(awk -F '|' '/^VPN Connection Setting Name/{print $2}' logs/log1.txt)
+server=$(awk -F '|' '/^Server Name/{print $2}' logs/log1.txt)
+
+echo "Disconnecting to Server"
+	vpncmd /client localhost /cmd accountdisconnect $account
+echo "Resetting IP Routes..."
+	ip route del $server via 192.168.1.1 dev wlp2s0 proto static	
+        ip route del default
+        ip route add default via 192.168.1.1 dev wlp2s0
+echo "Stopping VPNClient..."
+	vpnclient stop
+echo "Disconnected."
+read -p "Press [Enter] key to continue..." fackEnterKey
+
+
+
